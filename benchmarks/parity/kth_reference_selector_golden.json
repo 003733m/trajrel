@@ -1,0 +1,196 @@
+{
+  "reference_commit": "7c4fe80c19b3a9537f395f515a64432e41ee1d43",
+  "cases": [
+    {
+      "id": "generic_builtin_rejected",
+      "tool_outputs": [
+        "Confirmed root cause: dict(config) failed."
+      ],
+      "target_content": "result = dict(config)\nother = 1\n",
+      "user_context": "",
+      "provisional_kinds": null,
+      "expected_ranked": [
+        {
+          "token": "dict",
+          "kind": "function_name",
+          "score": 4.666666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 10,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ],
+      "expected_selected": []
+    },
+    {
+      "id": "weak_plain_function_rejected",
+      "tool_outputs": [
+        "Observed get(config) during inspection.",
+        "Calling get(config) again."
+      ],
+      "target_content": "value = get(config)\nother = 1\n",
+      "user_context": "",
+      "provisional_kinds": null,
+      "expected_ranked": [
+        {
+          "token": "get",
+          "kind": "function_name",
+          "score": 3.333333333333333,
+          "distinct_tools": 2,
+          "occurrences": 2,
+          "positive_evidence": 0,
+          "negative_evidence": 0,
+          "recency": 1.0
+        }
+      ],
+      "expected_selected": []
+    },
+    {
+      "id": "user_context_duplicate_rejected",
+      "tool_outputs": [
+        "Confirmed root cause: resolve_backend_target(config) failed."
+      ],
+      "target_content": "def resolve_backend_target(config):\n    return config\nother = 1\n",
+      "user_context": "Please inspect resolve_backend_target(config).",
+      "provisional_kinds": null,
+      "expected_ranked": [
+        {
+          "token": "resolve_backend_target",
+          "kind": "function_name",
+          "score": 4.666666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 10,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ],
+      "expected_selected": []
+    },
+    {
+      "id": "absent_target_rejected",
+      "tool_outputs": [
+        "Confirmed root cause: resolve_backend_target(config) failed."
+      ],
+      "target_content": "def unrelated_function(value):\n    return value\n",
+      "user_context": "",
+      "provisional_kinds": null,
+      "expected_ranked": [
+        {
+          "token": "resolve_backend_target",
+          "kind": "function_name",
+          "score": 4.666666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 10,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ],
+      "expected_selected": []
+    },
+    {
+      "id": "specificity_ranks_rare_identifier_higher",
+      "tool_outputs": [
+        "Confirmed root cause: resolve_backend_target(config) failed.\nConfirmed root cause: parse_provider_config(config) failed."
+      ],
+      "target_content": "resolve_backend_target(config)\nparse_provider_config(config)\nparse_provider_config(other)\nparse_provider_config(value)\nparse_provider_config(data)\nother_line = 1\nother_line = 2\nother_line = 3\n",
+      "user_context": "",
+      "provisional_kinds": null,
+      "expected_ranked": [
+        {
+          "token": "parse_provider_config",
+          "kind": "function_name",
+          "score": 4.666666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 10,
+          "negative_evidence": 0,
+          "recency": 0.0
+        },
+        {
+          "token": "resolve_backend_target",
+          "kind": "function_name",
+          "score": 4.666666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 10,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ],
+      "expected_selected": [
+        {
+          "candidate": {
+            "token": "resolve_backend_target",
+            "kind": "function_name",
+            "score": 4.666666666666667,
+            "distinct_tools": 1,
+            "occurrences": 1,
+            "positive_evidence": 10,
+            "negative_evidence": 0,
+            "recency": 0.0
+          },
+          "score": 3.1944972416665993,
+          "target_specificity": 0.6845351232142712
+        },
+        {
+          "candidate": {
+            "token": "parse_provider_config",
+            "kind": "function_name",
+            "score": 4.666666666666667,
+            "distinct_tools": 1,
+            "occurrences": 1,
+            "positive_evidence": 10,
+            "negative_evidence": 0,
+            "recency": 0.0
+          },
+          "score": 1.2483951183248367,
+          "target_specificity": 0.2675132396410364
+        }
+      ]
+    },
+    {
+      "id": "provisional_test_singleton_corroborated",
+      "tool_outputs": [
+        "Observed test_singleton_bridge during inspection."
+      ],
+      "target_content": "tests/test_example.py:42: def test_singleton_bridge():\nother = 1\nother = 2\n",
+      "user_context": "",
+      "provisional_kinds": [
+        "test_name",
+        "request_id",
+        "exception"
+      ],
+      "expected_ranked": [
+        {
+          "token": "test_singleton_bridge",
+          "kind": "test_name",
+          "score": 0.6666666666666666,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 0,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ],
+      "expected_selected": [
+        {
+          "candidate": {
+            "token": "test_singleton_bridge",
+            "kind": "test_name",
+            "score": 0.6666666666666666,
+            "distinct_tools": 1,
+            "occurrences": 1,
+            "positive_evidence": 0,
+            "negative_evidence": 0,
+            "recency": 0.0
+          },
+          "score": 1.6666666666666665,
+          "target_specificity": 0.5
+        }
+      ]
+    }
+  ]
+}

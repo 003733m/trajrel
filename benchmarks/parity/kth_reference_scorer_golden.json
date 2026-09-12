@@ -1,0 +1,166 @@
+{
+  "reference_commit": "7c4fe80c19b3a9537f395f515a64432e41ee1d43",
+  "scoring_config": {
+    "causal_weight": 4.0,
+    "cross_tool_weight": 2.0,
+    "occurrence_weight": 2.0,
+    "recency_weight": 1.0,
+    "speculation_weight": 2.0,
+    "max_cross_tool_steps": 2,
+    "max_occurrences": 3,
+    "min_score": 2.0
+  },
+  "cases": [
+    {
+      "id": "causal_singleton",
+      "tool_outputs": [
+        "Confirmed root cause: resolve_backend_target(config) failed."
+      ],
+      "provisional_kinds": null,
+      "expected": [
+        {
+          "token": "resolve_backend_target",
+          "kind": "function_name",
+          "score": 4.666666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 10,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ]
+    },
+    {
+      "id": "cross_output_recurrence",
+      "tool_outputs": [
+        "Observed resolve_backend_target(config) during inspection.",
+        "Calling resolve_backend_target(config) again."
+      ],
+      "provisional_kinds": null,
+      "expected": [
+        {
+          "token": "resolve_backend_target",
+          "kind": "function_name",
+          "score": 3.333333333333333,
+          "distinct_tools": 2,
+          "occurrences": 2,
+          "positive_evidence": 0,
+          "negative_evidence": 0,
+          "recency": 1.0
+        }
+      ]
+    },
+    {
+      "id": "speculative_cross_output",
+      "tool_outputs": [
+        "Possible hypothesis: resolve_backend_target(config) may be wrong.",
+        "Maybe resolve_backend_target(config) is suspect."
+      ],
+      "provisional_kinds": null,
+      "expected": []
+    },
+    {
+      "id": "hypothesis_shift",
+      "tool_outputs": [
+        "Hypothesis: legacy_router(config) may be responsible.",
+        "Still suspect legacy_router(config) as a possible candidate.",
+        "Confirmed root cause: resolve_backend_target(config) failed."
+      ],
+      "provisional_kinds": null,
+      "expected": [
+        {
+          "token": "resolve_backend_target",
+          "kind": "function_name",
+          "score": 5.666666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 10,
+          "negative_evidence": 0,
+          "recency": 1.0
+        }
+      ]
+    },
+    {
+      "id": "structured_causal_identifiers",
+      "tool_outputs": [
+        "failure affected tests/test_provider_registry.py test_copilot_openai_target_routes_anthropic_to_copilot request req-2048 ConfigError DEDUP_AUTO_THRESHOLD"
+      ],
+      "provisional_kinds": null,
+      "expected": [
+        {
+          "token": "ConfigError",
+          "kind": "exception",
+          "score": 4.266666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 9,
+          "negative_evidence": 0,
+          "recency": 0.0
+        },
+        {
+          "token": "DEDUP_AUTO_THRESHOLD",
+          "kind": "config_key",
+          "score": 4.266666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 9,
+          "negative_evidence": 0,
+          "recency": 0.0
+        },
+        {
+          "token": "req-2048",
+          "kind": "request_id",
+          "score": 4.266666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 9,
+          "negative_evidence": 0,
+          "recency": 0.0
+        },
+        {
+          "token": "test_copilot_openai_target_routes_anthropic_to_copilot",
+          "kind": "test_name",
+          "score": 4.266666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 9,
+          "negative_evidence": 0,
+          "recency": 0.0
+        },
+        {
+          "token": "tests/test_provider_registry.py",
+          "kind": "file_path",
+          "score": 4.266666666666667,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 9,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ]
+    },
+    {
+      "id": "provisional_test_singleton",
+      "tool_outputs": [
+        "Observed test_singleton_bridge during inspection."
+      ],
+      "provisional_kinds": [
+        "test_name",
+        "request_id",
+        "exception"
+      ],
+      "expected": [
+        {
+          "token": "test_singleton_bridge",
+          "kind": "test_name",
+          "score": 0.6666666666666666,
+          "distinct_tools": 1,
+          "occurrences": 1,
+          "positive_evidence": 0,
+          "negative_evidence": 0,
+          "recency": 0.0
+        }
+      ]
+    }
+  ]
+}
