@@ -62,3 +62,51 @@ def get_scorer_ablation(name: str) -> AblationSpec:
             f"Unknown scorer ablation {name!r}. "
             f"Available: {available}"
         ) from exc
+
+
+from .selector import SelectorAblationSpec
+
+FULL_SELECTOR = SelectorAblationSpec()
+
+NO_GENERIC_IDENTIFIER_FILTER = SelectorAblationSpec(
+    generic_identifier_filter=False,
+)
+
+NO_WEAK_IDENTIFIER_FILTER = SelectorAblationSpec(
+    weak_identifier_filter=False,
+)
+
+NO_USER_CONTEXT_EXCLUSION = SelectorAblationSpec(
+    user_context_exclusion=False,
+)
+
+NO_TARGET_SPECIFICITY = SelectorAblationSpec(
+    target_specificity=False,
+)
+
+NO_SINGLETON_CORROBORATION = SelectorAblationSpec(
+    singleton_corroboration=False,
+)
+
+
+SELECTOR_ABLATIONS: dict[str, SelectorAblationSpec] = {
+    "full": FULL_SELECTOR,
+    "no_generic_identifier_filter": NO_GENERIC_IDENTIFIER_FILTER,
+    "no_weak_identifier_filter": NO_WEAK_IDENTIFIER_FILTER,
+    "no_user_context_exclusion": NO_USER_CONTEXT_EXCLUSION,
+    "no_target_specificity": NO_TARGET_SPECIFICITY,
+    "no_singleton_corroboration": NO_SINGLETON_CORROBORATION,
+}
+
+
+def get_selector_ablation(name: str) -> SelectorAblationSpec:
+    """Return a named selector ablation."""
+    try:
+        return SELECTOR_ABLATIONS[name]
+    except KeyError as exc:
+        available = ", ".join(sorted(SELECTOR_ABLATIONS))
+
+        raise ValueError(
+            f"Unknown selector ablation {name!r}. "
+            f"Available: {available}"
+        ) from exc
