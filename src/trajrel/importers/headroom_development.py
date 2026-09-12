@@ -185,6 +185,41 @@ def _user_context(
     return "\n\n".join(parts)
 
 
+
+def _parse_legacy_v3_bridges(
+    value: Any,
+) -> list[str]:
+    """Parse frozen bridge identifiers from historical V3 context."""
+    if not isinstance(value, str):
+        return []
+
+    prefix = "Trajectory bridge identifiers:"
+
+    for line in value.splitlines():
+        stripped = line.strip()
+
+        if not stripped.startswith(prefix):
+            continue
+
+        payload = stripped[
+            len(prefix):
+        ].strip()
+
+        if not payload:
+            return []
+
+        return [
+            token
+            for token in (
+                payload
+                .replace(",", " ")
+                .split()
+            )
+            if token
+        ]
+
+    return []
+
 def normalize_unit(
     *,
     task_id: str,
@@ -327,6 +362,11 @@ def normalize_unit(
         "query_context": unit.get(
             "query_context",
             "",
+        ),
+        "legacy_frozen_bridges": (
+            _parse_legacy_v3_bridges(
+                unit.get("v3_context")
+            )
         ),
         "user_context": _user_context(
             items,
