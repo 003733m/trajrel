@@ -537,10 +537,19 @@ def evaluate_variant(
             max_outputs=max_outputs,
         )
 
+        # Do not truncate before target conditioning.
+        #
+        # Historical semantics:
+        #   historical scorer -> full candidate pool
+        #   target-conditioned selector -> final top-k
+        #
+        # Premature top-k here can remove a lower-ranked
+        # historical identifier that becomes highly relevant
+        # once the current target is considered.
         ranked = rank_ablation_outputs(
             history,
             spec=scorer_spec,
-            top_k=6,
+            top_k=None,
         )
 
         if ranked:

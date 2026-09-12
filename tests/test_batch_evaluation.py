@@ -116,3 +116,46 @@ def test_frozen_legacy_adopted_floor_reproduction():
         result["added_noncritical_tokens"]
         == 504
     )
+
+
+def test_recomputed_full_matches_historical_mechanism():
+    from trajrel.ablations import (
+        SCORER_ABLATIONS,
+        SELECTOR_ABLATIONS,
+    )
+    from trajrel.evaluation import (
+        LEGACY_MEASUREMENT_VIEW,
+        evaluate_variant,
+        reproduce_legacy_adopted_floor,
+    )
+
+    corpus = _corpus()
+
+    frozen = reproduce_legacy_adopted_floor(
+        corpus
+    )
+
+    recomputed = evaluate_variant(
+        corpus,
+        view=LEGACY_MEASUREMENT_VIEW,
+        scorer_spec=SCORER_ABLATIONS["full"],
+        selector_spec=SELECTOR_ABLATIONS["full"],
+        variant="full",
+        family="combined",
+    )
+
+    keys = [
+        "units_with_adopted_bridge",
+        "baseline_critical_kept",
+        "final_critical_kept",
+        "critical_rescued",
+        "critical_regressed",
+        "forced_records",
+        "forced_critical_records",
+        "forced_noncritical_records",
+        "added_critical_tokens",
+        "added_noncritical_tokens",
+    ]
+
+    for key in keys:
+        assert recomputed[key] == frozen[key]
