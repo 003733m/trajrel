@@ -3,11 +3,11 @@ from pathlib import Path
 
 import pytest
 
-from trajrel.scorers.kth_reference import rank_kth_reference_outputs
+from trajrel.scorers.headroom_reference import rank_headroom_reference_outputs
 
 FIXTURE = (
     Path(__file__).resolve().parents[1]
-    / "benchmarks/parity/kth_reference_scorer_golden.json"
+    / "benchmarks/parity/headroom_reference_scorer_golden.json"
 )
 
 
@@ -31,13 +31,13 @@ def test_reference_default_config_matches_frozen_fixture():
     "case_index",
     range(6),
 )
-def test_kth_reference_scorer_matches_frozen_golden(case_index):
+def test_headroom_reference_scorer_matches_frozen_golden(case_index):
     data = json.loads(FIXTURE.read_text())
     case = data["cases"][case_index]
 
     provisional = case["provisional_kinds"]
 
-    actual = rank_kth_reference_outputs(
+    actual = rank_headroom_reference_outputs(
         case["tool_outputs"],
         top_k=None,
         provisional_kinds=(

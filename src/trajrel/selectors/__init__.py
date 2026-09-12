@@ -1,13 +1,13 @@
 """Target-conditioned bridge selectors."""
 
-from .kth_reference import (
-    KTHTargetBridgeCandidate,
-    select_kth_reference_candidates,
+from .headroom_reference import (
+    ReferenceTargetBridgeCandidate,
+    select_headroom_reference_candidates,
     target_specificity,
 )
 
 __all__ = [
-    "KTHTargetBridgeCandidate",
-    "select_kth_reference_candidates",
+    "ReferenceTargetBridgeCandidate",
+    "select_headroom_reference_candidates",
     "target_specificity",
 ]

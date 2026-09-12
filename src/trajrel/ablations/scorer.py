@@ -17,11 +17,11 @@ from collections import Counter, defaultdict
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from trajrel.scorers.kth_reference import (
+from trajrel.scorers.headroom_reference import (
     _MAX_NEGATIVE_CUE,
     _MAX_POSITIVE_CUE,
-    KTHBridgeCandidate,
-    KTHScoringConfig,
+    ReferenceBridgeCandidate,
+    ReferenceScoringConfig,
     _context_evidence,
     _find_candidates,
 )
@@ -47,15 +47,15 @@ def rank_ablation_outputs(
     *,
     spec: AblationSpec,
     top_k: int | None = 6,
-    scoring: KTHScoringConfig | None = None,
+    scoring: ReferenceScoringConfig | None = None,
     provisional_kinds: frozenset[str] | None = None,
-) -> tuple[KTHBridgeCandidate, ...]:
+) -> tuple[ReferenceBridgeCandidate, ...]:
     """Rank historical identifiers under one controlled ablation.
 
     With ``AblationSpec()`` this must be behaviorally identical to the frozen
     KTH historical scorer.
     """
-    scoring = scoring or KTHScoringConfig()
+    scoring = scoring or ReferenceScoringConfig()
 
     if not tool_outputs:
         return ()
@@ -100,7 +100,7 @@ def rank_ablation_outputs(
                 negative,
             )
 
-    ranked: list[KTHBridgeCandidate] = []
+    ranked: list[ReferenceBridgeCandidate] = []
 
     for token, occurrences in occurrence_count.items():
         distinct_outputs = len(output_presence[token])
@@ -224,7 +224,7 @@ def rank_ablation_outputs(
             continue
 
         ranked.append(
-            KTHBridgeCandidate(
+            ReferenceBridgeCandidate(
                 token=token,
                 kind=token_kind[token],
                 score=score,

@@ -1,15 +1,15 @@
 """Bridge-scoring implementations."""
 
-from .kth_reference import (
-    KTHBridgeCandidate,
-    KTHScoringConfig,
-    rank_kth_reference,
-    rank_kth_reference_outputs,
+from .headroom_reference import (
+    ReferenceBridgeCandidate,
+    ReferenceScoringConfig,
+    rank_headroom_reference,
+    rank_headroom_reference_outputs,
 )
 
 __all__ = [
-    "KTHBridgeCandidate",
-    "KTHScoringConfig",
-    "rank_kth_reference",
-    "rank_kth_reference_outputs",
+    "ReferenceBridgeCandidate",
+    "ReferenceScoringConfig",
+    "rank_headroom_reference",
+    "rank_headroom_reference_outputs",
 ]

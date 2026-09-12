@@ -29,7 +29,7 @@ TARGET_CORROBORATION_KINDS = frozenset(
 
 
 @dataclass(frozen=True, slots=True)
-class KTHScoringConfig:
+class ReferenceScoringConfig:
     causal_weight: float = 4.0
     cross_tool_weight: float = 2.0
     occurrence_weight: float = 2.0
@@ -43,7 +43,7 @@ class KTHScoringConfig:
 
 
 @dataclass(frozen=True, slots=True)
-class KTHBridgeCandidate:
+class ReferenceBridgeCandidate:
     token: str
     kind: str
     score: float
@@ -206,16 +206,16 @@ def _context_evidence(
     return positive, negative
 
 
-def rank_kth_reference_outputs(
+def rank_headroom_reference_outputs(
     tool_outputs: Sequence[str],
     *,
     top_k: int | None = DEFAULT_TOP_K,
-    scoring: KTHScoringConfig | None = None,
+    scoring: ReferenceScoringConfig | None = None,
     provisional_kinds: frozenset[str] | None = None,
-) -> tuple[KTHBridgeCandidate, ...]:
+) -> tuple[ReferenceBridgeCandidate, ...]:
     """Rank identifiers exactly as the frozen reference scorer did."""
 
-    scoring = scoring or KTHScoringConfig()
+    scoring = scoring or ReferenceScoringConfig()
 
     if not tool_outputs:
         return ()
@@ -264,7 +264,7 @@ def rank_kth_reference_outputs(
                 negative,
             )
 
-    ranked: list[KTHBridgeCandidate] = []
+    ranked: list[ReferenceBridgeCandidate] = []
 
     for token, occurrences in occurrence_count.items():
         distinct_tools = len(tool_presence[token])
@@ -338,7 +338,7 @@ def rank_kth_reference_outputs(
             continue
 
         ranked.append(
-            KTHBridgeCandidate(
+            ReferenceBridgeCandidate(
                 token=token,
                 kind=token_kind[token],
                 score=score,
@@ -365,15 +365,15 @@ def rank_kth_reference_outputs(
     return tuple(ranked[:top_k])
 
 
-def rank_kth_reference(
+def rank_headroom_reference(
     history: Sequence[ToolEvent],
     *,
     top_k: int | None = DEFAULT_TOP_K,
-    scoring: KTHScoringConfig | None = None,
+    scoring: ReferenceScoringConfig | None = None,
     provisional_kinds: frozenset[str] | None = None,
-) -> tuple[KTHBridgeCandidate, ...]:
+) -> tuple[ReferenceBridgeCandidate, ...]:
     """Apply the frozen scorer to generic TrajRel history."""
-    return rank_kth_reference_outputs(
+    return rank_headroom_reference_outputs(
         [event.content for event in history],
         top_k=top_k,
         scoring=scoring,

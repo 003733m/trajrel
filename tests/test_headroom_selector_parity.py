@@ -3,12 +3,12 @@ from pathlib import Path
 
 import pytest
 
-from trajrel.scorers.kth_reference import rank_kth_reference_outputs
-from trajrel.selectors.kth_reference import select_kth_reference_candidates
+from trajrel.scorers.headroom_reference import rank_headroom_reference_outputs
+from trajrel.selectors.headroom_reference import select_headroom_reference_candidates
 
 FIXTURE = (
     Path(__file__).resolve().parents[1]
-    / "benchmarks/parity/kth_reference_selector_golden.json"
+    / "benchmarks/parity/headroom_reference_selector_golden.json"
 )
 
 
@@ -19,7 +19,7 @@ def test_kth_target_selector_matches_frozen_golden(case_index):
 
     provisional = case["provisional_kinds"]
 
-    ranked = rank_kth_reference_outputs(
+    ranked = rank_headroom_reference_outputs(
         case["tool_outputs"],
         top_k=None,
         provisional_kinds=(
@@ -29,7 +29,7 @@ def test_kth_target_selector_matches_frozen_golden(case_index):
         ),
     )
 
-    selected = select_kth_reference_candidates(
+    selected = select_headroom_reference_candidates(
         list(ranked),
         target_content=case["target_content"],
         user_context=case["user_context"],

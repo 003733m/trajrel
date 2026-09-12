@@ -9,11 +9,11 @@ from trajrel.ablations import (
     get_selector_ablation,
     select_ablation_candidates,
 )
-from trajrel.scorers.kth_reference import rank_kth_reference_outputs
+from trajrel.scorers.headroom_reference import rank_headroom_reference_outputs
 
 FIXTURE = (
     Path(__file__).resolve().parents[1]
-    / "benchmarks/parity/kth_reference_selector_golden.json"
+    / "benchmarks/parity/headroom_reference_selector_golden.json"
 )
 
 
@@ -24,7 +24,7 @@ def test_full_selector_ablation_matches_frozen_reference(case_index):
 
     provisional = case["provisional_kinds"]
 
-    ranked = rank_kth_reference_outputs(
+    ranked = rank_headroom_reference_outputs(
         case["tool_outputs"],
         top_k=None,
         provisional_kinds=(
@@ -81,7 +81,7 @@ def _fixture_case(case_id: str) -> dict:
 def _rank_case(case: dict):
     provisional = case["provisional_kinds"]
 
-    return rank_kth_reference_outputs(
+    return rank_headroom_reference_outputs(
         case["tool_outputs"],
         top_k=None,
         provisional_kinds=(

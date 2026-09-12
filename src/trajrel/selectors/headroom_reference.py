@@ -7,18 +7,18 @@ import math
 import re
 from dataclasses import dataclass
 
-from trajrel.scorers.kth_reference import (
+from trajrel.scorers.headroom_reference import (
     _MAX_NEGATIVE_CUE,
     _MAX_POSITIVE_CUE,
     TARGET_CORROBORATION_KINDS,
-    KTHBridgeCandidate,
-    KTHScoringConfig,
+    ReferenceBridgeCandidate,
+    ReferenceScoringConfig,
 )
 
 
 @dataclass(frozen=True, slots=True)
-class KTHTargetBridgeCandidate:
-    candidate: KTHBridgeCandidate
+class ReferenceTargetBridgeCandidate:
+    candidate: ReferenceBridgeCandidate
     score: float
     target_specificity: float
 
@@ -92,7 +92,7 @@ def _contains_candidate(
 
 
 def _is_generic_bridge_identifier(
-    candidate: KTHBridgeCandidate,
+    candidate: ReferenceBridgeCandidate,
 ) -> bool:
     if candidate.kind not in {"function_name", "class_name"}:
         return False
@@ -101,7 +101,7 @@ def _is_generic_bridge_identifier(
 
 
 def _is_weak_unstructured_bridge_identifier(
-    candidate: KTHBridgeCandidate,
+    candidate: ReferenceBridgeCandidate,
 ) -> bool:
     if candidate.positive_evidence > 0:
         return False
@@ -119,9 +119,9 @@ def _is_weak_unstructured_bridge_identifier(
 
 
 def _target_document_frequencies(
-    candidates: list[KTHBridgeCandidate],
+    candidates: list[ReferenceBridgeCandidate],
     target_content: str,
-) -> tuple[int, dict[KTHBridgeCandidate, int]]:
+) -> tuple[int, dict[ReferenceBridgeCandidate, int]]:
     frequencies = dict.fromkeys(candidates, 0)
 
     raw_lines = target_content.splitlines(keepends=True)
@@ -338,21 +338,21 @@ def target_specificity(
     )
 
 
-def select_kth_reference_candidates(
-    candidates: list[KTHBridgeCandidate],
+def select_headroom_reference_candidates(
+    candidates: list[ReferenceBridgeCandidate],
     *,
     target_content: str,
     user_context: str,
     top_k: int = 6,
-    scoring: KTHScoringConfig | None = None,
-) -> tuple[KTHTargetBridgeCandidate, ...]:
+    scoring: ReferenceScoringConfig | None = None,
+) -> tuple[ReferenceTargetBridgeCandidate, ...]:
     """Condition frozen historical candidates on the current target."""
     if not candidates or not target_content or top_k <= 0:
         return ()
 
-    scoring = scoring or KTHScoringConfig()
+    scoring = scoring or ReferenceScoringConfig()
 
-    admissible: list[KTHBridgeCandidate] = []
+    admissible: list[ReferenceBridgeCandidate] = []
 
     for candidate in candidates:
         if _is_generic_bridge_identifier(candidate):
@@ -381,7 +381,7 @@ def select_kth_reference_candidates(
     if n_lines <= 0:
         return ()
 
-    selected: list[KTHTargetBridgeCandidate] = []
+    selected: list[ReferenceTargetBridgeCandidate] = []
 
     for candidate in admissible:
         specificity = _target_specificity_from_frequency(
@@ -460,7 +460,7 @@ def select_kth_reference_candidates(
             continue
 
         selected.append(
-            KTHTargetBridgeCandidate(
+            ReferenceTargetBridgeCandidate(
                 candidate=candidate,
                 score=adjusted_score,
                 target_specificity=specificity,

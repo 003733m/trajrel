@@ -9,11 +9,11 @@ from trajrel.ablations import (
     get_scorer_ablation,
     rank_ablation_outputs,
 )
-from trajrel.scorers.kth_reference import KTHScoringConfig
+from trajrel.scorers.headroom_reference import ReferenceScoringConfig
 
 FIXTURE = (
     Path(__file__).resolve().parents[1]
-    / "benchmarks/parity/kth_reference_scorer_golden.json"
+    / "benchmarks/parity/headroom_reference_scorer_golden.json"
 )
 
 
@@ -79,7 +79,7 @@ def test_causal_score_and_causal_eligibility_are_distinct():
         "Confirmed root cause: resolve_backend_target(config) failed."
     ]
 
-    no_threshold = KTHScoringConfig(
+    no_threshold = ReferenceScoringConfig(
         min_score=None,
     )
 
@@ -115,7 +115,7 @@ def test_cross_output_score_and_eligibility_are_distinct():
         "Calling resolve_backend_target(config) again.",
     ]
 
-    no_threshold = KTHScoringConfig(
+    no_threshold = ReferenceScoringConfig(
         min_score=None,
     )
 
@@ -150,7 +150,7 @@ def test_removing_speculation_penalty_only_increases_score():
         "Maybe resolve_backend_target(config) is suspect.",
     ]
 
-    no_threshold = KTHScoringConfig(
+    no_threshold = ReferenceScoringConfig(
         min_score=None,
     )
 

@@ -345,9 +345,8 @@ def normalize_unit(
         "replay_valid": bool(
             unit.get("replay_valid")
         ),
-        "strict_hash_valid": bool(
-            unit.get("replay_valid")
-            and unit.get(
+        "direct_replay_hash_exact": bool(
+            unit.get(
                 "off_unit_hash_matches_captured"
             )
         ),
@@ -396,6 +395,41 @@ def _index_wire_requests(
     return indexed
 
 
+def _legacy_unit_key(
+    unit: dict[str, Any],
+) -> tuple[str, str, str]:
+    task = unit.get("task")
+    request_id = unit.get("request_id")
+    call_id = unit.get("call_id")
+
+    if not isinstance(task, str):
+        raise TypeError(
+            "Legacy unit task is not a string"
+        )
+
+    if not isinstance(request_id, str):
+        raise TypeError(
+            "Legacy unit request_id is not a string"
+        )
+
+    if not isinstance(call_id, str):
+        raise TypeError(
+            "Legacy unit call_id is not a string"
+        )
+
+    return task, request_id, call_id
+
+
+def _record_identity(
+    record: dict[str, Any],
+) -> tuple[Any, Any, Any]:
+    return (
+        record.get("path"),
+        record.get("line"),
+        record.get("text"),
+    )
+
+
 def build_development_corpus(
     *,
     raw_root: Path,
@@ -405,7 +439,18 @@ def build_development_corpus(
         / "hard_matched_context_replay_results.json"
     )
 
-    replay = json.loads(replay_path.read_text())
+    legacy_path = (
+        raw_root
+        / "normalized_retention_measurement.json"
+    )
+
+    replay = json.loads(
+        replay_path.read_text()
+    )
+
+    legacy = json.loads(
+        legacy_path.read_text()
+    )
 
     normalized_units: list[dict[str, Any]] = []
 
@@ -415,6 +460,37 @@ def build_development_corpus(
         raise TypeError(
             "Replay artifact has no tasks object"
         )
+
+    legacy_units = legacy.get("units")
+
+    if not isinstance(legacy_units, list):
+        raise TypeError(
+            "Legacy measurement has no units list"
+        )
+
+    legacy_by_key: dict[
+        tuple[str, str, str],
+        dict[str, Any],
+    ] = {}
+
+    for legacy_unit in legacy_units:
+        if not isinstance(legacy_unit, dict):
+            continue
+
+        key = _legacy_unit_key(
+            legacy_unit
+        )
+
+        if key in legacy_by_key:
+            raise ValueError(
+                f"Duplicate legacy unit: {key}"
+            )
+
+        legacy_by_key[key] = legacy_unit
+
+    used_legacy_keys: set[
+        tuple[str, str, str]
+    ] = set()
 
     for task_id, task in tasks.items():
         if not isinstance(task, dict):
@@ -442,44 +518,262 @@ def build_development_corpus(
                     "Replay unit has no request_id"
                 )
 
-            match = request_index.get(request_id)
+            call_id = unit.get("call_id")
+
+            if not isinstance(call_id, str):
+                raise TypeError(
+                    "Replay unit has no call_id"
+                )
+
+            match = request_index.get(
+                request_id
+            )
 
             if match is None:
                 raise ValueError(
-                    "No upstream wire request for "
+                    "No inbound wire request for "
                     f"{task_id}/{request_id}"
                 )
 
             wire_path, request = match
 
-            normalized_units.append(
-                normalize_unit(
-                    task_id=task_id,
-                    task=task,
-                    unit=unit,
-                    request=request,
-                    wire_path=str(
-                        wire_path.relative_to(
-                            raw_root
-                        )
-                    ),
+            normalized = normalize_unit(
+                task_id=task_id,
+                task=task,
+                unit=unit,
+                request=request,
+                wire_path=str(
+                    wire_path.relative_to(
+                        raw_root
+                    )
+                ),
+            )
+
+            legacy_key = (
+                task_id,
+                request_id,
+                call_id,
+            )
+
+            legacy_unit = legacy_by_key.get(
+                legacy_key
+            )
+
+            if legacy_unit is None:
+                raise ValueError(
+                    "No legacy normalized unit for "
+                    f"{legacy_key}"
+                )
+
+            used_legacy_keys.add(
+                legacy_key
+            )
+
+            normalized[
+                "legacy_strict_hash_valid"
+            ] = bool(
+                legacy_unit.get(
+                    "strict_hash_valid"
                 )
             )
 
-    strict_units = sum(
-        unit["strict_hash_valid"]
-        for unit in normalized_units
-    )
+            normalized[
+                "legacy_content_valid"
+            ] = bool(
+                legacy_unit.get(
+                    "content_valid"
+                )
+            )
 
-    replay_valid_units = sum(
-        unit["replay_valid"]
+            normalized[
+                "legacy_bc_replay_stable_across_runs"
+            ] = bool(
+                legacy_unit.get(
+                    "BC_replay_stable_across_runs"
+                )
+            )
+
+            if (
+                normalized[
+                    "direct_replay_hash_exact"
+                ]
+                != normalized[
+                    "legacy_strict_hash_valid"
+                ]
+            ):
+                raise ValueError(
+                    "Direct replay hash label does "
+                    "not match legacy strict hash "
+                    f"label for {legacy_key}"
+                )
+
+            legacy_records = (
+                legacy_unit.get("records")
+            )
+
+            if not isinstance(
+                legacy_records,
+                list,
+            ):
+                raise TypeError(
+                    "Legacy unit records is not a list"
+                )
+
+            new_records = normalized["records"]
+
+            if len(new_records) != len(
+                legacy_records
+            ):
+                raise ValueError(
+                    "Record-count mismatch for "
+                    f"{legacy_key}: "
+                    f"{len(new_records)} != "
+                    f"{len(legacy_records)}"
+                )
+
+            for new_record, legacy_record in zip(
+                new_records,
+                legacy_records,
+                strict=True,
+            ):
+                if not isinstance(
+                    legacy_record,
+                    dict,
+                ):
+                    raise TypeError(
+                        "Legacy record is not an object"
+                    )
+
+                if (
+                    _record_identity(new_record)
+                    != _record_identity(
+                        legacy_record
+                    )
+                ):
+                    raise ValueError(
+                        "Record identity/order mismatch "
+                        f"for {legacy_key}"
+                    )
+
+                if (
+                    new_record["critical"]
+                    != bool(
+                        legacy_record.get(
+                            "fix_adjacent"
+                        )
+                    )
+                ):
+                    raise ValueError(
+                        "Critical-label mismatch for "
+                        f"{legacy_key}"
+                    )
+
+                new_record[
+                    "legacy_scorable"
+                ] = bool(
+                    legacy_record.get(
+                        "scorable"
+                    )
+                )
+
+                new_record[
+                    "legacy_record_tokens"
+                ] = legacy_record.get(
+                    "record_tokens"
+                )
+
+                new_record[
+                    "legacy_normalized_captured_keep"
+                ] = legacy_record.get(
+                    "captured_keep"
+                )
+
+                new_record[
+                    "legacy_normalized_a_keep"
+                ] = legacy_record.get(
+                    "A_keep"
+                )
+
+                legacy_kept = (
+                    legacy_record.get("kept")
+                )
+
+                new_record[
+                    "legacy_normalized_kept"
+                ] = (
+                    dict(legacy_kept)
+                    if isinstance(
+                        legacy_kept,
+                        dict,
+                    )
+                    else None
+                )
+
+            normalized_units.append(
+                normalized
+            )
+
+    if set(legacy_by_key) != used_legacy_keys:
+        missing = sorted(
+            set(legacy_by_key)
+            - used_legacy_keys
+        )
+
+        extra = sorted(
+            used_legacy_keys
+            - set(legacy_by_key)
+        )
+
+        raise ValueError(
+            "Replay/legacy unit-set mismatch: "
+            f"missing={missing}, extra={extra}"
+        )
+
+    replay_valid_units = [
+        unit
         for unit in normalized_units
-    )
+        if unit["replay_valid"]
+    ]
+
+    direct_hash_units = [
+        unit
+        for unit in normalized_units
+        if unit["direct_replay_hash_exact"]
+    ]
+
+    legacy_strict_units = [
+        unit
+        for unit in normalized_units
+        if unit["legacy_strict_hash_valid"]
+    ]
+
+    legacy_content_valid_units = [
+        unit
+        for unit in normalized_units
+        if unit["legacy_content_valid"]
+    ]
+
+    all_records = [
+        record
+        for unit in normalized_units
+        for record in unit["records"]
+    ]
+
+    legacy_strict_records = [
+        record
+        for unit in legacy_strict_units
+        for record in unit["records"]
+    ]
 
     return {
-        "schema_version": 1,
-        "name": "headroom_hard_matched_development_v1",
-        "evaluation_role": "development_post_hoc",
+        "schema_version": 2,
+        "name": (
+            "headroom_hard_matched_"
+            "development_v2"
+        ),
+        "evaluation_role": (
+            "development_post_hoc"
+        ),
         "held_out": False,
         "source_evaluation_type": replay.get(
             "evaluation_type"
@@ -487,44 +781,99 @@ def build_development_corpus(
         "source_algorithm_freeze": replay.get(
             "algorithm_freeze"
         ),
+        "source_normalized_measurement": (
+            legacy.get("measurement")
+        ),
         "reference_history_max_tool_outputs": 8,
         "history_policy": {
-            "primary": "history_before_action",
-            "legacy": "legacy_history_before_target",
+            "primary": (
+                "history_before_action"
+            ),
+            "legacy": (
+                "legacy_history_before_target"
+            ),
             "reason": (
-                "Primary history excludes outputs that arrived "
-                "after the current action was already issued."
+                "Primary history excludes outputs "
+                "that arrived after the current "
+                "action was already issued."
+            ),
+        },
+        "strata": {
+            "direct_replay_hash_exact": (
+                "Captured OFF output hash exactly "
+                "matches the direct replay OFF "
+                "output hash."
+            ),
+            "legacy_strict_hash_valid": (
+                "Historical normalized-retention "
+                "strict hash stratum."
+            ),
+            "legacy_content_valid": (
+                "Historical normalized-retention "
+                "record-content validity stratum."
+            ),
+            "legacy_scorable": (
+                "Historical record-level "
+                "measurement eligibility."
             ),
         },
         "critical_label": {
             "field": "critical",
-            "source": "historical_fix_adjacent",
+            "source": (
+                "historical_fix_adjacent"
+            ),
             "development_only": True,
         },
         "summary": {
             "tasks": len(tasks),
             "units": len(normalized_units),
-            "replay_valid_units": replay_valid_units,
-            "strict_hash_valid_units": strict_units,
-            "records": sum(
-                len(unit["records"])
-                for unit in normalized_units
+            "replay_valid_units": len(
+                replay_valid_units
             ),
-            "strict_records": sum(
-                len(unit["records"])
-                for unit in normalized_units
-                if unit["strict_hash_valid"]
+            "direct_replay_hash_exact_units": (
+                len(direct_hash_units)
+            ),
+            "legacy_strict_units": len(
+                legacy_strict_units
+            ),
+            "legacy_content_valid_units": len(
+                legacy_content_valid_units
+            ),
+            "records": len(all_records),
+            "legacy_scorable_records": sum(
+                record["legacy_scorable"]
+                for record in all_records
+            ),
+            "legacy_strict_records": len(
+                legacy_strict_records
+            ),
+            "legacy_strict_scorable_records": (
+                sum(
+                    record["legacy_scorable"]
+                    for record
+                    in legacy_strict_records
+                )
             ),
             "critical_records": sum(
                 record["critical"]
-                for unit in normalized_units
-                for record in unit["records"]
+                for record in all_records
             ),
-            "strict_critical_records": sum(
-                record["critical"]
-                for unit in normalized_units
-                if unit["strict_hash_valid"]
-                for record in unit["records"]
+            "legacy_strict_critical_records": (
+                sum(
+                    record["critical"]
+                    for record
+                    in legacy_strict_records
+                )
+            ),
+            "legacy_strict_critical_scorable_records": (
+                sum(
+                    record["critical"]
+                    and record[
+                        "legacy_scorable"
+                    ]
+                    for record
+                    in legacy_strict_records
+                )
             ),
         },
         "units": normalized_units,

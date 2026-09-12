@@ -4,15 +4,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from trajrel.scorers.kth_reference import (
+from trajrel.scorers.headroom_reference import (
     _MAX_NEGATIVE_CUE,
     _MAX_POSITIVE_CUE,
     TARGET_CORROBORATION_KINDS,
-    KTHBridgeCandidate,
-    KTHScoringConfig,
+    ReferenceBridgeCandidate,
+    ReferenceScoringConfig,
 )
-from trajrel.selectors.kth_reference import (
-    KTHTargetBridgeCandidate,
+from trajrel.selectors.headroom_reference import (
+    ReferenceTargetBridgeCandidate,
     _contains_candidate,
     _is_generic_bridge_identifier,
     _is_weak_unstructured_bridge_identifier,
@@ -33,22 +33,22 @@ class SelectorAblationSpec:
 
 
 def select_ablation_candidates(
-    candidates: list[KTHBridgeCandidate],
+    candidates: list[ReferenceBridgeCandidate],
     *,
     target_content: str,
     user_context: str,
     spec: SelectorAblationSpec,
     top_k: int = 6,
-    scoring: KTHScoringConfig | None = None,
-) -> tuple[KTHTargetBridgeCandidate, ...]:
+    scoring: ReferenceScoringConfig | None = None,
+) -> tuple[ReferenceTargetBridgeCandidate, ...]:
     """Condition historical candidates under controlled selector ablations."""
 
     if not candidates or not target_content or top_k <= 0:
         return ()
 
-    scoring = scoring or KTHScoringConfig()
+    scoring = scoring or ReferenceScoringConfig()
 
-    admissible: list[KTHBridgeCandidate] = []
+    admissible: list[ReferenceBridgeCandidate] = []
 
     for candidate in candidates:
         if (
@@ -87,7 +87,7 @@ def select_ablation_candidates(
     if n_lines <= 0:
         return ()
 
-    selected: list[KTHTargetBridgeCandidate] = []
+    selected: list[ReferenceTargetBridgeCandidate] = []
 
     for candidate in admissible:
         document_frequency = document_frequencies[candidate]
@@ -175,7 +175,7 @@ def select_ablation_candidates(
             continue
 
         selected.append(
-            KTHTargetBridgeCandidate(
+            ReferenceTargetBridgeCandidate(
                 candidate=candidate,
                 score=adjusted_score,
                 target_specificity=specificity,
