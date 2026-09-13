@@ -606,3 +606,157 @@ def result_to_dict(
             result.incremental_precision
         ),
     }
+
+
+def evaluate_budget_matched_b_only_token(
+    *,
+    units: Sequence[dict[str, Any]],
+    b_by_unit: dict[
+        str,
+        tuple[str, ...],
+    ],
+    token_budget_by_unit: dict[
+        str,
+        int,
+    ],
+) -> PolicyBaselineResult:
+    """B-only under the same per-unit token budget as B∩Q.
+
+    B identifiers retain selector ranking. Matching dropped records are
+    considered from most recent to oldest. A record is retained only when
+    it fits inside the remaining token budget.
+    """
+    selected: dict[str, set[int]] = {}
+
+    for unit in units:
+        unit_id = unit["unit_id"]
+
+        remaining = max(
+            0,
+            token_budget_by_unit.get(
+                unit_id,
+                0,
+            ),
+        )
+
+        chosen: set[int] = set()
+
+        if remaining:
+            records = _scorable_records(
+                unit
+            )
+
+            for identifier in b_by_unit.get(
+                unit_id,
+                (),
+            ):
+                matching = [
+                    (index, record)
+                    for index, record
+                    in reversed(records)
+                    if index not in chosen
+                    and not base_keep(record)
+                    and identifier_present(
+                        _record_text(record),
+                        identifier,
+                    )
+                ]
+
+                for index, record in matching:
+                    tokens = record_tokens(
+                        record
+                    )
+
+                    if tokens > remaining:
+                        continue
+
+                    chosen.add(index)
+                    remaining -= tokens
+
+                    if remaining == 0:
+                        break
+
+                if remaining == 0:
+                    break
+
+        selected[unit_id] = chosen
+
+    return _evaluate_selected_indices(
+        units=units,
+        policy_name=(
+            "B_only_same_token_budget"
+        ),
+        selected_indices_by_unit=selected,
+    )
+
+
+def evaluate_random_b_cardinality_sham(
+    *,
+    units: Sequence[dict[str, Any]],
+    b_by_unit: dict[
+        str,
+        tuple[str, ...],
+    ],
+    adopted_cardinality_by_unit: dict[
+        str,
+        int,
+    ],
+    seed: int,
+) -> PolicyBaselineResult:
+    """Choose random B identifiers using the same |B∩Q| per unit.
+
+    This preserves the number of adopted bridge identifiers while removing
+    the current-action Q conditioning.
+    """
+    rng = random.Random(seed)
+
+    identifiers_by_unit: dict[
+        str,
+        tuple[str, ...],
+    ] = {}
+
+    for unit in units:
+        unit_id = unit["unit_id"]
+
+        candidates = tuple(
+            b_by_unit.get(
+                unit_id,
+                (),
+            )
+        )
+
+        count = min(
+            max(
+                0,
+                adopted_cardinality_by_unit.get(
+                    unit_id,
+                    0,
+                ),
+            ),
+            len(candidates),
+        )
+
+        if count:
+            identifiers_by_unit[
+                unit_id
+            ] = tuple(
+                rng.sample(
+                    candidates,
+                    count,
+                )
+            )
+        else:
+            identifiers_by_unit[
+                unit_id
+            ] = ()
+
+    return evaluate_identifier_policy(
+        units=units,
+        policy_name=(
+            "random_B_cardinality_sham_"
+            f"seed_{seed}"
+        ),
+        identifiers_by_unit=(
+            identifiers_by_unit
+        ),
+    )

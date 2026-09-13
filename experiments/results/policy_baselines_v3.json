@@ -1,0 +1,178 @@
+{
+  "evaluation_type": "development_policy_controls_v3",
+  "held_out": false,
+  "history_policy": "history_before_action",
+  "random_runs": 10000,
+  "observed_rescues": 1,
+  "trajrel_budget": {
+    "forced_records": 2,
+    "added_tokens": 60,
+    "adopted_identifiers": 3
+  },
+  "policies": {
+    "B_only": {
+      "policy": "B_only",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 12,
+      "critical_rescued": 3,
+      "forced_records": 35,
+      "forced_critical_records": 3,
+      "forced_noncritical_records": 32,
+      "added_critical_tokens": 105,
+      "added_noncritical_tokens": 789,
+      "added_total_tokens": 894,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.9230769230769231,
+      "incremental_precision": 0.08571428571428572
+    },
+    "Q_only": {
+      "policy": "Q_only",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 10,
+      "critical_rescued": 1,
+      "forced_records": 118,
+      "forced_critical_records": 1,
+      "forced_noncritical_records": 117,
+      "added_critical_tokens": 36,
+      "added_noncritical_tokens": 3270,
+      "added_total_tokens": 3306,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.7692307692307693,
+      "incremental_precision": 0.00847457627118644
+    },
+    "B_intersect_Q": {
+      "policy": "B_intersect_Q",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 10,
+      "critical_rescued": 1,
+      "forced_records": 2,
+      "forced_critical_records": 1,
+      "forced_noncritical_records": 1,
+      "added_critical_tokens": 36,
+      "added_noncritical_tokens": 24,
+      "added_total_tokens": 60,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.7692307692307693,
+      "incremental_precision": 0.5
+    },
+    "B_only_same_record_budget": {
+      "policy": "B_only_same_record_budget",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 10,
+      "critical_rescued": 1,
+      "forced_records": 2,
+      "forced_critical_records": 1,
+      "forced_noncritical_records": 1,
+      "added_critical_tokens": 34,
+      "added_noncritical_tokens": 22,
+      "added_total_tokens": 56,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.7692307692307693,
+      "incremental_precision": 0.5
+    },
+    "B_only_same_token_budget": {
+      "policy": "B_only_same_token_budget",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 10,
+      "critical_rescued": 1,
+      "forced_records": 2,
+      "forced_critical_records": 1,
+      "forced_noncritical_records": 1,
+      "added_critical_tokens": 34,
+      "added_noncritical_tokens": 22,
+      "added_total_tokens": 56,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.7692307692307693,
+      "incremental_precision": 0.5
+    },
+    "recent_same_record_budget": {
+      "policy": "recent_same_record_budget",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 9,
+      "critical_rescued": 0,
+      "forced_records": 2,
+      "forced_critical_records": 0,
+      "forced_noncritical_records": 2,
+      "added_critical_tokens": 0,
+      "added_noncritical_tokens": 42,
+      "added_total_tokens": 42,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.6923076923076923,
+      "incremental_precision": 0.0
+    }
+  },
+  "null_controls": {
+    "random_same_record_budget": {
+      "runs": 10000,
+      "mean_rescues": 0.2118,
+      "rescue_histogram": {
+        "0": 7970,
+        "1": 1942,
+        "2": 88
+      },
+      "runs_ge_observed_rescues": 2030,
+      "fraction_ge_observed_rescues": 0.203,
+      "empirical_p_ge_observed": 0.20307969203079693,
+      "mean_forced_records": 2,
+      "mean_added_noncritical_tokens": 38.6105,
+      "mean_added_total_tokens": 45.2884,
+      "min_rescues": 0,
+      "max_rescues": 2
+    },
+    "random_same_token_budget": {
+      "runs": 10000,
+      "mean_rescues": 0.2128,
+      "rescue_histogram": {
+        "0": 7914,
+        "1": 2044,
+        "2": 42
+      },
+      "runs_ge_observed_rescues": 2086,
+      "fraction_ge_observed_rescues": 0.2086,
+      "empirical_p_ge_observed": 0.2086791320867913,
+      "mean_forced_records": 2.5985,
+      "mean_added_noncritical_tokens": 48.8169,
+      "mean_added_total_tokens": 55.204,
+      "min_rescues": 0,
+      "max_rescues": 2
+    },
+    "random_B_cardinality_sham": {
+      "runs": 10000,
+      "mean_rescues": 0.6584,
+      "rescue_histogram": {
+        "0": 3416,
+        "1": 6584
+      },
+      "runs_ge_observed_rescues": 6584,
+      "fraction_ge_observed_rescues": 0.6584,
+      "empirical_p_ge_observed": 0.6584341565843416,
+      "mean_forced_records": 1.1681,
+      "mean_added_noncritical_tokens": 12.7627,
+      "mean_added_total_tokens": 35.6472,
+      "min_rescues": 0,
+      "max_rescues": 1
+    },
+    "shuffled_Q_same_cardinality": {
+      "runs": 10000,
+      "mean_rescues": 0.0887,
+      "rescue_histogram": {
+        "0": 9113,
+        "1": 887
+      },
+      "runs_ge_observed_rescues": 887,
+      "fraction_ge_observed_rescues": 0.0887,
+      "empirical_p_ge_observed": 0.0887911208879112,
+      "mean_forced_records": 0.1774,
+      "mean_added_noncritical_tokens": 2.1288,
+      "mean_added_total_tokens": 5.322,
+      "min_rescues": 0,
+      "max_rescues": 1
+    }
+  }
+}
