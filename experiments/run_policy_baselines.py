@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from statistics import mean
 
 from trajrel.ablations import (
     SCORER_ABLATIONS,
@@ -15,9 +16,13 @@ from trajrel.adoption import (
     adopted_bridge_identifiers,
 )
 from trajrel.evaluation.policy_baselines import (
+    evaluate_budget_matched_b_only,
     evaluate_identifier_policy,
     evaluate_random_same_record_budget,
-    identifier_present,
+    evaluate_random_same_token_budget,
+    evaluate_recent_same_record_budget,
+    forced_record_indices,
+    record_tokens,
     result_to_dict,
 )
 from trajrel.query_signals import (
@@ -31,8 +36,10 @@ CORPUS = Path(
 
 OUTPUT = Path(
     "experiments/results/"
-    "policy_baselines_v1.json"
+    "policy_baselines_v2.json"
 )
+
+RANDOM_RUNS = 10_000
 
 
 def action_command(
@@ -79,6 +86,71 @@ def history_outputs(
     return outputs[-8:]
 
 
+def random_summary(
+    results: list,
+) -> dict:
+    rescues = [
+        row.critical_rescued
+        for row in results
+    ]
+
+    forced_records = [
+        row.forced_records
+        for row in results
+    ]
+
+    forced_critical = [
+        row.forced_critical_records
+        for row in results
+    ]
+
+    noncritical_tokens = [
+        row.added_noncritical_tokens
+        for row in results
+    ]
+
+    total_tokens = [
+        row.added_total_tokens
+        for row in results
+    ]
+
+    return {
+        "runs": len(results),
+        "mean_rescues": mean(
+            rescues
+        ),
+        "runs_with_at_least_one_rescue": sum(
+            value >= 1
+            for value in rescues
+        ),
+        "fraction_with_at_least_one_rescue": (
+            sum(
+                value >= 1
+                for value in rescues
+            )
+            / len(results)
+        ),
+        "mean_forced_records": mean(
+            forced_records
+        ),
+        "mean_forced_critical_records": mean(
+            forced_critical
+        ),
+        "mean_added_noncritical_tokens": mean(
+            noncritical_tokens
+        ),
+        "mean_added_total_tokens": mean(
+            total_tokens
+        ),
+        "min_rescues": min(
+            rescues
+        ),
+        "max_rescues": max(
+            rescues
+        ),
+    }
+
+
 def main() -> None:
     corpus = json.loads(
         CORPUS.read_text()
@@ -114,6 +186,11 @@ def main() -> None:
     ] = {}
 
     forced_budget_by_unit: dict[
+        str,
+        int,
+    ] = {}
+
+    token_budget_by_unit: dict[
         str,
         int,
     ] = {}
@@ -167,39 +244,31 @@ def main() -> None:
         q_by_unit[unit_id] = q
         a_by_unit[unit_id] = a
 
-        forced = 0
-
-        for record in unit["records"]:
-            if not record.get(
-                "legacy_scorable"
-            ):
-                continue
-
-            if record[
-                "legacy_normalized_a_keep"
-            ]:
-                continue
-
-            raw = record.get(
-                "raw",
-                record.get(
-                    "text",
-                    "",
-                ),
+        forced_indices = (
+            forced_record_indices(
+                unit,
+                a,
             )
-
-            if any(
-                identifier_present(
-                    raw,
-                    identifier,
-                )
-                for identifier in a
-            ):
-                forced += 1
+        )
 
         forced_budget_by_unit[
             unit_id
-        ] = forced
+        ] = len(
+            forced_indices
+        )
+
+        token_budget = 0
+
+        records = unit["records"]
+
+        for index in forced_indices:
+            token_budget += record_tokens(
+                records[index]
+            )
+
+        token_budget_by_unit[
+            unit_id
+        ] = token_budget
 
     b_only = evaluate_identifier_policy(
         units=units,
@@ -219,7 +288,26 @@ def main() -> None:
         identifiers_by_unit=a_by_unit,
     )
 
-    random_results = [
+    b_budget = (
+        evaluate_budget_matched_b_only(
+            units=units,
+            b_by_unit=b_by_unit,
+            forced_budget_by_unit=(
+                forced_budget_by_unit
+            ),
+        )
+    )
+
+    recent = (
+        evaluate_recent_same_record_budget(
+            units=units,
+            forced_budget_by_unit=(
+                forced_budget_by_unit
+            ),
+        )
+    )
+
+    random_record_results = [
         evaluate_random_same_record_budget(
             units=units,
             forced_budget_by_unit=(
@@ -227,27 +315,27 @@ def main() -> None:
             ),
             seed=seed,
         )
-        for seed in range(100)
+        for seed in range(
+            RANDOM_RUNS
+        )
     ]
 
-    random_rescues = [
-        result.critical_rescued
-        for result in random_results
-    ]
-
-    random_critical = [
-        result.forced_critical_records
-        for result in random_results
-    ]
-
-    random_noncritical_tokens = [
-        result.added_noncritical_tokens
-        for result in random_results
+    random_token_results = [
+        evaluate_random_same_token_budget(
+            units=units,
+            token_budget_by_unit=(
+                token_budget_by_unit
+            ),
+            seed=seed,
+        )
+        for seed in range(
+            RANDOM_RUNS
+        )
     ]
 
     result = {
         "evaluation_type": (
-            "development_policy_baselines"
+            "development_policy_baselines_v2"
         ),
         "held_out": False,
         "history_policy": (
@@ -260,6 +348,20 @@ def main() -> None:
             "structured_search_pattern"
         ),
         "units": len(units),
+        "trajrel_budget": {
+            "forced_records": sum(
+                forced_budget_by_unit.values()
+            ),
+            "added_tokens": sum(
+                token_budget_by_unit.values()
+            ),
+            "forced_records_by_unit": (
+                forced_budget_by_unit
+            ),
+            "token_budget_by_unit": (
+                token_budget_by_unit
+            ),
+        },
         "policies": {
             "B_only": result_to_dict(
                 b_only
@@ -272,40 +374,39 @@ def main() -> None:
                     full
                 )
             ),
+            "B_only_same_record_budget": (
+                result_to_dict(
+                    b_budget
+                )
+            ),
+            "recent_same_record_budget": (
+                result_to_dict(
+                    recent
+                )
+            ),
         },
         "random_same_record_budget": {
-            "runs": len(
-                random_results
-            ),
-            "mean_rescues": (
-                sum(random_rescues)
-                / len(random_rescues)
-            ),
-            "runs_with_at_least_one_rescue": (
-                sum(
-                    value >= 1
-                    for value
-                    in random_rescues
-                )
-            ),
-            "mean_forced_critical_records": (
-                sum(random_critical)
-                / len(random_critical)
-            ),
-            "mean_added_noncritical_tokens": (
-                sum(
-                    random_noncritical_tokens
-                )
-                / len(
-                    random_noncritical_tokens
-                )
+            **random_summary(
+                random_record_results
             ),
             "results": [
                 result_to_dict(
                     row
                 )
                 for row
-                in random_results
+                in random_record_results
+            ],
+        },
+        "random_same_token_budget": {
+            **random_summary(
+                random_token_results
+            ),
+            "results": [
+                result_to_dict(
+                    row
+                )
+                for row
+                in random_token_results
             ],
         },
     }
@@ -324,7 +425,7 @@ def main() -> None:
     )
 
     print(
-        "===== POLICY BASELINES ====="
+        "===== POLICY BASELINES V2 ====="
     )
 
     for name, row in result[
@@ -340,6 +441,7 @@ def main() -> None:
             "forced_noncritical_records",
             "added_critical_tokens",
             "added_noncritical_tokens",
+            "added_total_tokens",
             "critical_recall_before",
             "critical_recall_after",
             "incremental_precision",
@@ -354,21 +456,47 @@ def main() -> None:
         "===== RANDOM SAME-RECORD-BUDGET ====="
     )
 
-    random_summary = result[
+    for key, value in result[
         "random_same_record_budget"
-    ]
+    ].items():
+        if key == "results":
+            continue
 
-    for key in [
-        "runs",
-        "mean_rescues",
-        "runs_with_at_least_one_rescue",
-        "mean_forced_critical_records",
-        "mean_added_noncritical_tokens",
-    ]:
         print(
-            f"{key}: "
-            f"{random_summary[key]}"
+            f"{key}: {value}"
         )
+
+    print()
+    print(
+        "===== RANDOM SAME-TOKEN-BUDGET ====="
+    )
+
+    for key, value in result[
+        "random_same_token_budget"
+    ].items():
+        if key == "results":
+            continue
+
+        print(
+            f"{key}: {value}"
+        )
+
+    print()
+    print(
+        "===== TRAJREL BUDGET ====="
+    )
+    print(
+        "forced records:",
+        result["trajrel_budget"][
+            "forced_records"
+        ],
+    )
+    print(
+        "added tokens:",
+        result["trajrel_budget"][
+            "added_tokens"
+        ],
+    )
 
     print()
     print("WROTE:", OUTPUT)
