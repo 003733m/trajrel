@@ -1,0 +1,961 @@
+{
+  "evaluation_type": "core_robustness_v1",
+  "held_out": false,
+  "core_policy": "exact_B_intersect_Q",
+  "explicit_action_context": false,
+  "units": 13,
+  "tasks": 6,
+  "overall": {
+    "counts": {
+      "critical_records": 13,
+      "base_critical_kept": 9,
+      "base_critical_dropped": 4
+    },
+    "B_only": {
+      "policy": "B_only",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 12,
+      "critical_rescued": 3,
+      "forced_records": 35,
+      "forced_critical_records": 3,
+      "forced_noncritical_records": 32,
+      "added_critical_tokens": 105,
+      "added_noncritical_tokens": 789,
+      "added_total_tokens": 894,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.9230769230769231,
+      "incremental_precision": 0.08571428571428572
+    },
+    "Q_only": {
+      "policy": "Q_only",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 10,
+      "critical_rescued": 1,
+      "forced_records": 118,
+      "forced_critical_records": 1,
+      "forced_noncritical_records": 117,
+      "added_critical_tokens": 36,
+      "added_noncritical_tokens": 3270,
+      "added_total_tokens": 3306,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.7692307692307693,
+      "incremental_precision": 0.00847457627118644
+    },
+    "B_intersect_Q": {
+      "policy": "B_intersect_Q",
+      "critical_records": 13,
+      "baseline_critical_kept": 9,
+      "final_critical_kept": 10,
+      "critical_rescued": 1,
+      "forced_records": 2,
+      "forced_critical_records": 1,
+      "forced_noncritical_records": 1,
+      "added_critical_tokens": 36,
+      "added_noncritical_tokens": 24,
+      "added_total_tokens": 60,
+      "critical_recall_before": 0.6923076923076923,
+      "critical_recall_after": 0.7692307692307693,
+      "incremental_precision": 0.5
+    }
+  },
+  "supporting_tasks": {
+    "B_only": [
+      "G21"
+    ],
+    "Q_only": [
+      "G21"
+    ],
+    "B_intersect_Q": [
+      "G21"
+    ]
+  },
+  "per_task": {
+    "G04": {
+      "counts": {
+        "critical_records": 0,
+        "base_critical_kept": 0,
+        "base_critical_dropped": 0
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 10,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 10,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 221,
+        "added_total_tokens": 221,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": 0.0
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 23,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 23,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 527,
+        "added_total_tokens": 527,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": 0.0
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": null
+      }
+    },
+    "G07": {
+      "counts": {
+        "critical_records": 0,
+        "base_critical_kept": 0,
+        "base_critical_dropped": 0
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": null
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 21,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 21,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 565,
+        "added_total_tokens": 565,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": 0.0
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": null
+      }
+    },
+    "G09": {
+      "counts": {
+        "critical_records": 4,
+        "base_critical_kept": 4,
+        "base_critical_dropped": 0
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 4,
+        "baseline_critical_kept": 4,
+        "final_critical_kept": 4,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": 1.0,
+        "critical_recall_after": 1.0,
+        "incremental_precision": null
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 4,
+        "baseline_critical_kept": 4,
+        "final_critical_kept": 4,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": 1.0,
+        "critical_recall_after": 1.0,
+        "incremental_precision": null
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 4,
+        "baseline_critical_kept": 4,
+        "final_critical_kept": 4,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": 1.0,
+        "critical_recall_after": 1.0,
+        "incremental_precision": null
+      }
+    },
+    "G10": {
+      "counts": {
+        "critical_records": 0,
+        "base_critical_kept": 0,
+        "base_critical_dropped": 0
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": null
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": null
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": null
+      }
+    },
+    "G19": {
+      "counts": {
+        "critical_records": 0,
+        "base_critical_kept": 0,
+        "base_critical_dropped": 0
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 11,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 11,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 299,
+        "added_total_tokens": 299,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": 0.0
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 68,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 68,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 2049,
+        "added_total_tokens": 2049,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": 0.0
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 0,
+        "baseline_critical_kept": 0,
+        "final_critical_kept": 0,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": null,
+        "critical_recall_after": null,
+        "incremental_precision": null
+      }
+    },
+    "G21": {
+      "counts": {
+        "critical_records": 9,
+        "base_critical_kept": 5,
+        "base_critical_dropped": 4
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 9,
+        "baseline_critical_kept": 5,
+        "final_critical_kept": 8,
+        "critical_rescued": 3,
+        "forced_records": 14,
+        "forced_critical_records": 3,
+        "forced_noncritical_records": 11,
+        "added_critical_tokens": 105,
+        "added_noncritical_tokens": 269,
+        "added_total_tokens": 374,
+        "critical_recall_before": 0.5555555555555556,
+        "critical_recall_after": 0.8888888888888888,
+        "incremental_precision": 0.21428571428571427
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 9,
+        "baseline_critical_kept": 5,
+        "final_critical_kept": 6,
+        "critical_rescued": 1,
+        "forced_records": 6,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 5,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 129,
+        "added_total_tokens": 165,
+        "critical_recall_before": 0.5555555555555556,
+        "critical_recall_after": 0.6666666666666666,
+        "incremental_precision": 0.16666666666666666
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 9,
+        "baseline_critical_kept": 5,
+        "final_critical_kept": 6,
+        "critical_rescued": 1,
+        "forced_records": 2,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 1,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 24,
+        "added_total_tokens": 60,
+        "critical_recall_before": 0.5555555555555556,
+        "critical_recall_after": 0.6666666666666666,
+        "incremental_precision": 0.5
+      }
+    }
+  },
+  "leave_one_task_out": {
+    "G04": {
+      "counts": {
+        "critical_records": 13,
+        "base_critical_kept": 9,
+        "base_critical_dropped": 4
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 12,
+        "critical_rescued": 3,
+        "forced_records": 25,
+        "forced_critical_records": 3,
+        "forced_noncritical_records": 22,
+        "added_critical_tokens": 105,
+        "added_noncritical_tokens": 568,
+        "added_total_tokens": 673,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.9230769230769231,
+        "incremental_precision": 0.12
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 95,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 94,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 2743,
+        "added_total_tokens": 2779,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.010526315789473684
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 2,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 1,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 24,
+        "added_total_tokens": 60,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.5
+      }
+    },
+    "G07": {
+      "counts": {
+        "critical_records": 13,
+        "base_critical_kept": 9,
+        "base_critical_dropped": 4
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 12,
+        "critical_rescued": 3,
+        "forced_records": 35,
+        "forced_critical_records": 3,
+        "forced_noncritical_records": 32,
+        "added_critical_tokens": 105,
+        "added_noncritical_tokens": 789,
+        "added_total_tokens": 894,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.9230769230769231,
+        "incremental_precision": 0.08571428571428572
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 97,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 96,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 2705,
+        "added_total_tokens": 2741,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.010309278350515464
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 2,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 1,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 24,
+        "added_total_tokens": 60,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.5
+      }
+    },
+    "G09": {
+      "counts": {
+        "critical_records": 9,
+        "base_critical_kept": 5,
+        "base_critical_dropped": 4
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 9,
+        "baseline_critical_kept": 5,
+        "final_critical_kept": 8,
+        "critical_rescued": 3,
+        "forced_records": 35,
+        "forced_critical_records": 3,
+        "forced_noncritical_records": 32,
+        "added_critical_tokens": 105,
+        "added_noncritical_tokens": 789,
+        "added_total_tokens": 894,
+        "critical_recall_before": 0.5555555555555556,
+        "critical_recall_after": 0.8888888888888888,
+        "incremental_precision": 0.08571428571428572
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 9,
+        "baseline_critical_kept": 5,
+        "final_critical_kept": 6,
+        "critical_rescued": 1,
+        "forced_records": 118,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 117,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 3270,
+        "added_total_tokens": 3306,
+        "critical_recall_before": 0.5555555555555556,
+        "critical_recall_after": 0.6666666666666666,
+        "incremental_precision": 0.00847457627118644
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 9,
+        "baseline_critical_kept": 5,
+        "final_critical_kept": 6,
+        "critical_rescued": 1,
+        "forced_records": 2,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 1,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 24,
+        "added_total_tokens": 60,
+        "critical_recall_before": 0.5555555555555556,
+        "critical_recall_after": 0.6666666666666666,
+        "incremental_precision": 0.5
+      }
+    },
+    "G10": {
+      "counts": {
+        "critical_records": 13,
+        "base_critical_kept": 9,
+        "base_critical_dropped": 4
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 12,
+        "critical_rescued": 3,
+        "forced_records": 35,
+        "forced_critical_records": 3,
+        "forced_noncritical_records": 32,
+        "added_critical_tokens": 105,
+        "added_noncritical_tokens": 789,
+        "added_total_tokens": 894,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.9230769230769231,
+        "incremental_precision": 0.08571428571428572
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 118,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 117,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 3270,
+        "added_total_tokens": 3306,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.00847457627118644
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 2,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 1,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 24,
+        "added_total_tokens": 60,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.5
+      }
+    },
+    "G19": {
+      "counts": {
+        "critical_records": 13,
+        "base_critical_kept": 9,
+        "base_critical_dropped": 4
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 12,
+        "critical_rescued": 3,
+        "forced_records": 24,
+        "forced_critical_records": 3,
+        "forced_noncritical_records": 21,
+        "added_critical_tokens": 105,
+        "added_noncritical_tokens": 490,
+        "added_total_tokens": 595,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.9230769230769231,
+        "incremental_precision": 0.125
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 50,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 49,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 1221,
+        "added_total_tokens": 1257,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.02
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 13,
+        "baseline_critical_kept": 9,
+        "final_critical_kept": 10,
+        "critical_rescued": 1,
+        "forced_records": 2,
+        "forced_critical_records": 1,
+        "forced_noncritical_records": 1,
+        "added_critical_tokens": 36,
+        "added_noncritical_tokens": 24,
+        "added_total_tokens": 60,
+        "critical_recall_before": 0.6923076923076923,
+        "critical_recall_after": 0.7692307692307693,
+        "incremental_precision": 0.5
+      }
+    },
+    "G21": {
+      "counts": {
+        "critical_records": 4,
+        "base_critical_kept": 4,
+        "base_critical_dropped": 0
+      },
+      "B_only": {
+        "policy": "B_only",
+        "critical_records": 4,
+        "baseline_critical_kept": 4,
+        "final_critical_kept": 4,
+        "critical_rescued": 0,
+        "forced_records": 21,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 21,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 520,
+        "added_total_tokens": 520,
+        "critical_recall_before": 1.0,
+        "critical_recall_after": 1.0,
+        "incremental_precision": 0.0
+      },
+      "Q_only": {
+        "policy": "Q_only",
+        "critical_records": 4,
+        "baseline_critical_kept": 4,
+        "final_critical_kept": 4,
+        "critical_rescued": 0,
+        "forced_records": 112,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 112,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 3141,
+        "added_total_tokens": 3141,
+        "critical_recall_before": 1.0,
+        "critical_recall_after": 1.0,
+        "incremental_precision": 0.0
+      },
+      "B_intersect_Q": {
+        "policy": "B_intersect_Q",
+        "critical_records": 4,
+        "baseline_critical_kept": 4,
+        "final_critical_kept": 4,
+        "critical_rescued": 0,
+        "forced_records": 0,
+        "forced_critical_records": 0,
+        "forced_noncritical_records": 0,
+        "added_critical_tokens": 0,
+        "added_noncritical_tokens": 0,
+        "added_total_tokens": 0,
+        "critical_recall_before": 1.0,
+        "critical_recall_after": 1.0,
+        "incremental_precision": null
+      }
+    }
+  },
+  "unit_details": [
+    {
+      "task_id": "G09",
+      "unit_id": "G09:hr_1788519637_000009:call_wWadbNV80rpLySm5yekOgdyt",
+      "critical_records": 4,
+      "base_dropped_critical": 0,
+      "B_size": 2,
+      "Q_size": 3,
+      "A_size": 1,
+      "B_only_forced": 0,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 0,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [
+        "publish",
+        "tests/test_toin_publish.py"
+      ],
+      "Q": [
+        "publish",
+        "skip_compression_recommended",
+        "strategy_hint"
+      ],
+      "A": [
+        "publish"
+      ]
+    },
+    {
+      "task_id": "G07",
+      "unit_id": "G07:hr_1788520052_000010:call_eylD8qVrBmp1nSeTKiZc6qwv",
+      "critical_records": 0,
+      "base_dropped_critical": 0,
+      "B_size": 0,
+      "Q_size": 3,
+      "A_size": 0,
+      "B_only_forced": 0,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 21,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [],
+      "Q": [
+        "_count_serialized",
+        "count_messages",
+        "image_url"
+      ],
+      "A": []
+    },
+    {
+      "task_id": "G19",
+      "unit_id": "G19:hr_1788521004_000007:call_TOlQiGIky2lLpXrRiKymiS8S",
+      "critical_records": 0,
+      "base_dropped_critical": 0,
+      "B_size": 0,
+      "Q_size": 2,
+      "A_size": 0,
+      "B_only_forced": 0,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 50,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [],
+      "Q": [
+        "traffic_learner",
+        "TrafficLearner"
+      ],
+      "A": []
+    },
+    {
+      "task_id": "G19",
+      "unit_id": "G19:hr_1788521016_000009:call_3WNuyRvs1DlC6tQgRw8XDrfk",
+      "critical_records": 0,
+      "base_dropped_critical": 0,
+      "B_size": 2,
+      "Q_size": 2,
+      "A_size": 0,
+      "B_only_forced": 11,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 18,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [
+        "test_discover_projects_does_not_block_the_event_loop",
+        "tests/test_memory/test_traffic_learner.py"
+      ],
+      "Q": [
+        "discover_projects",
+        "flush_to_file"
+      ],
+      "A": []
+    },
+    {
+      "task_id": "G04",
+      "unit_id": "G04:hr_1788521289_000008:call_5YSrqhcMndBAJw88l82lAXJS",
+      "critical_records": 0,
+      "base_dropped_critical": 0,
+      "B_size": 3,
+      "Q_size": 2,
+      "A_size": 0,
+      "B_only_forced": 10,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 23,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [
+        "test_second_level_reset_jitter_does_not_reset_contribution",
+        "HeadroomContribution",
+        "tests/test_subscription_tracker.py"
+      ],
+      "Q": [
+        "maybe_reset_contribution",
+        "resets_at"
+      ],
+      "A": []
+    },
+    {
+      "task_id": "G21",
+      "unit_id": "G21:hr_1788522140_000009:call_A8bQ9cQj9ggmLl158pQ6TSHP",
+      "critical_records": 0,
+      "base_dropped_critical": 0,
+      "B_size": 1,
+      "Q_size": 3,
+      "A_size": 0,
+      "B_only_forced": 1,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 0,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [
+        "RuntimeError"
+      ],
+      "Q": [
+        "_execute_save",
+        "delete_memory",
+        "Similar"
+      ],
+      "A": []
+    },
+    {
+      "task_id": "G21",
+      "unit_id": "G21:hr_1788522140_000009:call_jS75JMlVF18hlMuWVSyWubqa",
+      "critical_records": 0,
+      "base_dropped_critical": 0,
+      "B_size": 3,
+      "Q_size": 1,
+      "A_size": 0,
+      "B_only_forced": 2,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 2,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [
+        "test_execute_save_preserves_high_similarity_distinct_memory",
+        "MemoryHandler",
+        "tests/test_memory_handler_native_ops.py"
+      ],
+      "Q": [
+        "_execute_save"
+      ],
+      "A": []
+    },
+    {
+      "task_id": "G21",
+      "unit_id": "G21:hr_1788522159_000011:call_LBrGwbEGPDrZabIxR3QNYslw",
+      "critical_records": 9,
+      "base_dropped_critical": 4,
+      "B_size": 6,
+      "Q_size": 2,
+      "A_size": 1,
+      "B_only_forced": 6,
+      "B_only_forced_critical": 3,
+      "Q_only_forced": 4,
+      "Q_only_forced_critical": 1,
+      "B_intersect_Q_forced": 2,
+      "B_intersect_Q_forced_critical": 1,
+      "B": [
+        "LocalBackend",
+        "MemoryConfig",
+        "__init__",
+        "_init_backend_locked",
+        "DEDUP_HINT_THRESHOLD",
+        "DEDUP_AUTO_THRESHOLD"
+      ],
+      "Q": [
+        "_background_dedup",
+        "DEDUP_AUTO_THRESHOLD"
+      ],
+      "A": [
+        "DEDUP_AUTO_THRESHOLD"
+      ]
+    },
+    {
+      "task_id": "G21",
+      "unit_id": "G21:hr_1788522159_000011:call_9tyXm8uSCaUylurP1AwD3mu1",
+      "critical_records": 0,
+      "base_dropped_critical": 0,
+      "B_size": 5,
+      "Q_size": 0,
+      "A_size": 0,
+      "B_only_forced": 5,
+      "B_only_forced_critical": 0,
+      "Q_only_forced": 0,
+      "Q_only_forced_critical": 0,
+      "B_intersect_Q_forced": 0,
+      "B_intersect_Q_forced_critical": 0,
+      "B": [
+        "MemoryHandler",
+        "tests/test_memory_handler_native_ops.py",
+        "ValueError",
+        "warning",
+        "_execute_save"
+      ],
+      "Q": [],
+      "A": []
+    }
+  ]
+}

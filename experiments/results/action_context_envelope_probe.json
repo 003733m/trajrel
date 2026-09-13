@@ -1,0 +1,213 @@
+{
+  "base_critical": 13,
+  "base_critical_kept": 9,
+  "exact_forced": 2,
+  "exact_forced_critical": 1,
+  "exact_added_tokens": 60,
+  "exact_added_noncritical_tokens": 24,
+  "envelope_forced": 19,
+  "envelope_forced_critical": 4,
+  "envelope_added_tokens": 435,
+  "envelope_added_noncritical_tokens": 310,
+  "exact_critical_after": 10,
+  "envelope_critical_after": 13,
+  "exact_recall_after": 0.7692307692307693,
+  "envelope_recall_after": 1.0,
+  "exact_incremental_precision": 0.5,
+  "envelope_incremental_precision": 0.21052631578947367,
+  "details": [
+    {
+      "unit_id": "G10:hr_1788518394_000009:call_UyZWniwzhIb4fGtyfa0qgCz4",
+      "task_id": "G10",
+      "command": "rg -nH \"install_all|def install|failed to install|skipped due to install\" .",
+      "radius": 0,
+      "B": [
+        "test_install_all_skips_failed_extension_and_continues",
+        "FAILED",
+        "tests/test_proxy_extensions.py",
+        "install_all"
+      ],
+      "Q": [
+        "install",
+        "install_all"
+      ],
+      "A": [
+        "install_all"
+      ],
+      "anchors": [],
+      "new_envelope_records": []
+    },
+    {
+      "unit_id": "G09:hr_1788519637_000009:call_wWadbNV80rpLySm5yekOgdyt",
+      "task_id": "G09",
+      "command": "rg -nH \"def publish|skip_compression_recommended|strategy_hint\" headroom tests -g '*.py'",
+      "radius": 0,
+      "B": [
+        "publish",
+        "tests/test_toin_publish.py"
+      ],
+      "Q": [
+        "publish",
+        "skip_compression_recommended",
+        "strategy_hint"
+      ],
+      "A": [
+        "publish"
+      ],
+      "anchors": [],
+      "new_envelope_records": []
+    },
+    {
+      "unit_id": "G21:hr_1788522159_000011:call_LBrGwbEGPDrZabIxR3QNYslw",
+      "task_id": "G21",
+      "command": "rg -nH -C 8 \"_background_dedup|DEDUP_AUTO_THRESHOLD\" headroom tests --glob '*.py'",
+      "radius": 8,
+      "B": [
+        "LocalBackend",
+        "MemoryConfig",
+        "__init__",
+        "_init_backend_locked",
+        "DEDUP_HINT_THRESHOLD",
+        "DEDUP_AUTO_THRESHOLD"
+      ],
+      "Q": [
+        "_background_dedup",
+        "DEDUP_AUTO_THRESHOLD"
+      ],
+      "A": [
+        "DEDUP_AUTO_THRESHOLD"
+      ],
+      "anchors": [
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 181
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1327
+        }
+      ],
+      "new_envelope_records": [
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 180,
+          "critical": true,
+          "tokens": 20,
+          "text": "headroom/proxy/memory_handler.py-180-    # Cosine similarity thresholds for dedup"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 182,
+          "critical": true,
+          "tokens": 35,
+          "text": "headroom/proxy/memory_handler.py-182-    DEDUP_HINT_THRESHOLD = 0.75  # Suggest merge to LLM (related, possibly duplicate)"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 184,
+          "critical": true,
+          "tokens": 34,
+          "text": "headroom/proxy/memory_handler.py-184-    def __init__(self, config: MemoryConfig, agent_type: str = \"unknown\") -> None:"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 187,
+          "critical": false,
+          "tokens": 22,
+          "text": "headroom/proxy/memory_handler.py-187-        self._backend: LocalBackend | Any = None"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 188,
+          "critical": false,
+          "tokens": 23,
+          "text": "headroom/proxy/memory_handler.py-188-        # Per-project routing for the local backend. Built in"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 189,
+          "critical": false,
+          "tokens": 29,
+          "text": "headroom/proxy/memory_handler.py-189-        # ``_init_backend_locked`` so a single, shared resolver / LRU is"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1319,
+          "critical": false,
+          "tokens": 24,
+          "text": "headroom/proxy/memory_handler.py-1319-        per-project backend they wrote to so dedup never crosses"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1320,
+          "critical": false,
+          "tokens": 16,
+          "text": "headroom/proxy/memory_handler.py-1320-        workspaces."
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1322,
+          "critical": false,
+          "tokens": 25,
+          "text": "headroom/proxy/memory_handler.py-1322-        target = backend if backend is not None else self._backend"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1323,
+          "critical": false,
+          "tokens": 18,
+          "text": "headroom/proxy/memory_handler.py-1323-        if target is None:"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1324,
+          "critical": false,
+          "tokens": 14,
+          "text": "headroom/proxy/memory_handler.py-1324-            return"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1325,
+          "critical": false,
+          "tokens": 15,
+          "text": "headroom/proxy/memory_handler.py-1325-        try:"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1326,
+          "critical": false,
+          "tokens": 19,
+          "text": "headroom/proxy/memory_handler.py-1326-            for result in similar_results:"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1329,
+          "critical": false,
+          "tokens": 22,
+          "text": "headroom/proxy/memory_handler.py-1329-                if result.memory.id == new_memory_id:"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1332,
+          "critical": false,
+          "tokens": 17,
+          "text": "headroom/proxy/memory_handler.py-1332-                old = result.memory"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1333,
+          "critical": false,
+          "tokens": 19,
+          "text": "headroom/proxy/memory_handler.py-1333-                # Skip if already superseded"
+        },
+        {
+          "path": "headroom/proxy/memory_handler.py",
+          "line": 1334,
+          "critical": false,
+          "tokens": 23,
+          "text": "headroom/proxy/memory_handler.py-1334-                if old.metadata.get(\"superseded_by\"):"
+        }
+      ]
+    }
+  ]
+}
