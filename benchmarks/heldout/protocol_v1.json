@@ -1,0 +1,58 @@
+{
+  "protocol_version": 1,
+  "status": "preregistered_before_heldout_collection",
+  "development_data_excluded": true,
+  "development_task_ids": [
+    "G04",
+    "G07",
+    "G09",
+    "G10",
+    "G19",
+    "G21"
+  ],
+  "primary_history_cutoff": "history_before_action",
+  "base_keep_field": "legacy_normalized_a_keep",
+  "critical_field": "critical",
+  "scorable_field": "legacy_scorable",
+  "history_max_tool_outputs": 8,
+  "bridge_scorer": "headroom_reference_full",
+  "bridge_selector": "headroom_reference_full",
+  "bridge_selector_top_k": 6,
+  "query_signal": "structured_search_pattern",
+  "adoption_rule": "exact_B_intersect_Q",
+  "record_match": "exact_identifier_boundary",
+  "monotonic_floor": true,
+  "primary_policy": "B_intersect_Q",
+  "secondary_policies": [
+    "B_only",
+    "Q_only"
+  ],
+  "controls": [
+    "recent_same_record_budget",
+    "random_same_record_budget",
+    "random_same_token_budget",
+    "B_only_same_record_budget",
+    "B_only_same_token_budget"
+  ],
+  "primary_metrics": [
+    "base_dropped_critical_opportunities",
+    "critical_rescued",
+    "critical_recall_before",
+    "critical_recall_after",
+    "forced_records",
+    "forced_critical_records",
+    "forced_noncritical_records",
+    "incremental_precision",
+    "added_critical_tokens",
+    "added_noncritical_tokens"
+  ],
+  "task_level_metrics": [
+    "tasks_with_base_dropped_critical",
+    "tasks_with_at_least_one_rescue",
+    "rescue_supporting_task_ids"
+  ],
+  "development_only_exploratory_variants": [
+    "explicit_action_context_envelope",
+    "semantic_Q"
+  ]
+}

@@ -1,0 +1,7 @@
+{
+  "manifest_version": 1,
+  "status": "uncollected",
+  "target_task_count_min": 10,
+  "target_task_count_preferred": 20,
+  "tasks": []
+}
